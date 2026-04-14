@@ -22,11 +22,11 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.Property(x => x.NumberOfPages).HasMaxLength(200).IsRequired();
             e.HasOne(x => x.Author).WithMany(x => x.Books).HasForeignKey(x => x.AuthorId);
         });
-        
+
         // Configure AuthorEntity
         modelBuilder.Entity<AuthorEntity>(e =>
         {
-            e.ToTable("Author");
+            e.ToTable("Authors");
             e.HasKey(x => x.Id);
             e.Property(x => x.Name).HasMaxLength(100).IsRequired();
             e.Property(x => x.LastName).HasMaxLength(100).IsRequired();

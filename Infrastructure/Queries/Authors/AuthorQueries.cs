@@ -7,9 +7,9 @@ namespace Infrastructure.Queries.Authors;
 
 public class AuthorQueries(UnitOfWork unitOfWork) : IAuthorQueries
 {
-    public async Task<List<AuthorEntity>> GetAuthorByIdAsync(CancellationToken ct)
+    public async Task<List<AuthorEntity>> GetAllAsync(CancellationToken ct)
     {
-        const string sql = @"SELECT * FROM Authorses";
-        return (List<AuthorEntity>) await unitOfWork.Connection.QueryAsync<AuthorEntity>(sql, ct);
+        const string sql = @"SELECT * FROM Authors";
+        return (List<AuthorEntity>)await unitOfWork.Connection.QueryAsync<AuthorEntity>(sql, ct);
     }
 }
