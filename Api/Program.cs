@@ -1,6 +1,8 @@
-using Core.Domains.Authors;
+using Application.UseCases.Authors;
+using Domain.Entities;
 using Infrastructure;
 using Microsoft.OpenApi;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddScoped<CreateAuthorDomain>();
-builder.Services.AddScoped<AuthorListDomain>();
+builder.Services.AddScoped<CreateAuthorUseCase>();
+builder.Services.AddScoped<AuthorListUseCase>();
 
 var app = builder.Build();
 

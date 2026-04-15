@@ -1,9 +1,9 @@
 ﻿using Application.Abstractions.Authors;
-using Application.Entities;
+using Domain.Entities;
 
-namespace Core.Domains.Authors;
+namespace Application.UseCases.Authors;
 
-public class AuthorListDomain(IAuthorQueries authorQueries)
+public class AuthorListUseCase(IAuthorQueries authorQueries)
 {
     public async Task<List<AuthorEntity>> GetAuthorsAsync(CancellationToken ct) => await authorQueries.GetAllAsync(ct);
 

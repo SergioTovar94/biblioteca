@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Authors;
-using Application.Entities;
+using Domain.Entities;
 using Dapper;
 using Infrastructure.Persistences;
 

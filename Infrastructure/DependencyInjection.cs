@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions;
 using Application.Abstractions.Authors;
+using Application.Abstractions.Persistence;
 using Infrastructure.Persistences;
 using Infrastructure.Queries.Authors;
 using Infrastructure.Repositories.Authors;
