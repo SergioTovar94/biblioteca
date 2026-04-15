@@ -12,14 +12,17 @@ public class AuthorController : ControllerBase
 
     private readonly CreateAuthorUseCase _createAuthor;
     private readonly ListAuthorsUseCase _listAuthors;
+    private readonly GetAuthorUserCase _getAuthor;
 
     public AuthorController(
         CreateAuthorUseCase createAuthor,
-        ListAuthorsUseCase listAuthors
+        ListAuthorsUseCase listAuthors,
+        GetAuthorUserCase getAuthor
         )
     {
         _createAuthor = createAuthor;
         _listAuthors = listAuthors;
+        _getAuthor = getAuthor;
     }
 
     [HttpPost("Create")]
@@ -83,6 +86,26 @@ public class AuthorController : ControllerBase
             Page = result.Value.Page,
             PageSize = result.Value.PageSize,
             TotalPages = result.Value.TotalPages
+        };
+        return Ok(response);
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<AuthorResponseDto>> GetById(int id, CancellationToken ct)
+    {
+        var query = new GetAuthorQuery(id);
+        var result = await _getAuthor.Handler(query, ct);
+        if (!result.IsSuccess)
+            return NotFound(new { error = result.Error });
+        var author = result.Value;
+        var response = new AuthorResponseDto
+        {
+            Id = author.Id,
+            Name = author.Name,
+            LastName = author.LastName,
+            BirthDate = author.BirthDate,
+            Country = author.Country,
+            Biography = author.Biography
         };
         return Ok(response);
     }
