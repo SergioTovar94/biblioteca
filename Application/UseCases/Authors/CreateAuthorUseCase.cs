@@ -30,6 +30,10 @@ public class CreateAuthorUseCase
             {
                 Name = command.Name,
                 LastName = command.LastName,
+                BirthDate = command.BirthDate,
+                Country = command.Country,
+                Biography = command.Biography,
+                IsDeleted = false,
                 Books = new List<BookEntity>()
             };
 

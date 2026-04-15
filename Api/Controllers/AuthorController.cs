@@ -16,7 +16,9 @@ public class AuthorController : ControllerBase
         [FromServices] CreateAuthorUseCase useCase,
         CancellationToken ct)
     {
-        var command = new CreateAuthorCommand(request.Name, request.LastName);
+        var command = new CreateAuthorCommand(
+            request.Name, request.LastName, request.BirthDate, request.Country, request.Biography
+            );
         var result = await useCase.Execute(command, ct);
         if (result.IsSuccess)
         {
@@ -24,7 +26,10 @@ public class AuthorController : ControllerBase
             {
                 Id = result.Value,
                 Name = request.Name,
-                LastName = request.LastName
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+                Country = request.Country,
+                Biography = request.Biography
             };
             return CreatedAtAction(nameof(CreateAuthor), new { id = result.Value }, response);
         }

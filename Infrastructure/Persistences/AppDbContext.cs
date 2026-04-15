@@ -30,6 +30,10 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.HasKey(x => x.Id);
             e.Property(x => x.Name).HasMaxLength(100).IsRequired();
             e.Property(x => x.LastName).HasMaxLength(100).IsRequired();
+            e.Property(x => x.BirthDate).IsRequired(false);
+            e.Property(x => x.Country).HasMaxLength(100).IsRequired(false);
+            e.Property(x => x.Biography).HasColumnType("nvarchar(max)").IsRequired(false);
+            e.Property(x => x.IsDeleted).HasDefaultValue(false);
             e.HasMany(x => x.Books).WithOne(x => x.Author).HasForeignKey(x => x.AuthorId);
         });
     }
