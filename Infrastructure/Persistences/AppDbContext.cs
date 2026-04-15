@@ -9,6 +9,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     #region DbSets 
     public DbSet<BookEntity> BooksEntities => Set<BookEntity>();
     public DbSet<AuthorEntity> AuthorEntities => Set<AuthorEntity>();
+    public DbSet<LoanEntity> LoanEntities => Set<LoanEntity>();
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,6 +23,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.Property(x => x.PublishedDate).IsRequired();
             e.Property(x => x.Genre).HasMaxLength(50).IsRequired(false);
             e.Property(x => x.NumberOfPages).IsRequired();
+            e.Property(x => x.CoverImagePath).HasMaxLength(500).IsRequired(false);
             e.HasOne(x => x.Author).WithMany(x => x.Books).HasForeignKey(x => x.AuthorId);
         });
 
@@ -37,6 +39,18 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.Property(x => x.Biography).HasColumnType("nvarchar(max)").IsRequired(false);
             e.Property(x => x.IsDeleted).HasDefaultValue(false);
             e.HasMany(x => x.Books).WithOne(x => x.Author).HasForeignKey(x => x.AuthorId);
+        });
+
+        // Configure LoanEntity
+        modelBuilder.Entity<LoanEntity>(e =>
+        {
+            e.ToTable("Loans");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.BorrowerName).HasMaxLength(200).IsRequired();
+            e.Property(x => x.LoanDate).IsRequired();
+            e.Property(x => x.DueDate).IsRequired();
+            e.Property(x => x.ReturnDate).IsRequired(false);
+            e.HasOne(x => x.Book).WithMany().HasForeignKey(x => x.BookId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }
