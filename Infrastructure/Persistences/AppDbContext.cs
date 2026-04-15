@@ -7,9 +7,9 @@ namespace Infrastructure.Persistences;
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     #region DbSets 
-    public DbSet<BookEntity> BooksEntities => Set<BookEntity>();
-    public DbSet<AuthorEntity> AuthorEntities => Set<AuthorEntity>();
-    public DbSet<LoanEntity> LoanEntities => Set<LoanEntity>();
+    public DbSet<BookEntity> Books => Set<BookEntity>();
+    public DbSet<AuthorEntity> Authors => Set<AuthorEntity>();
+    public DbSet<LoanEntity> Loans => Set<LoanEntity>();
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

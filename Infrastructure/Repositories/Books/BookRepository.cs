@@ -5,35 +5,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Books;
 
-public class BookRepository : IBookRepository
+public class BookRepository(AppDbContext appDbContext) : IBookRepository
 {
-    private readonly AppDbContext _dbContext;
-
-    public BookRepository(AppDbContext dbContext)
+    public async Task AddAsync(BookEntity book, CancellationToken ct)
     {
-        _dbContext = dbContext;
+        await appDbContext.Books.AddAsync(book, ct);
     }
-
     public async Task<BookEntity?> GetByIdAsync(int id, CancellationToken ct = default)
-        => await _dbContext.BooksEntities
+    {
+        return await appDbContext.Books
             .Include(b => b.Author)
             .FirstOrDefaultAsync(b => b.Id == id, ct);
+    }
 
-    public async Task<IEnumerable<BookEntity>> GetAllAsync(CancellationToken ct = default)
-        => await _dbContext.BooksEntities
+    public async Task<IReadOnlyList<BookEntity>> GetAllAsync(CancellationToken ct = default)
+    {
+        return await appDbContext.Books
             .Include(b => b.Author)
             .ToListAsync(ct);
+    }
 
     public async Task<IEnumerable<BookEntity>> GetByAuthorIdAsync(int authorId, CancellationToken ct = default)
-        => await _dbContext.BooksEntities
+    {
+        return await appDbContext.Books
             .Where(b => b.AuthorId == authorId)
             .Include(b => b.Author)
             .ToListAsync(ct);
+    }
 
-    public async Task AddAsync(BookEntity book, CancellationToken ct = default)
-        => await _dbContext.BooksEntities.AddAsync(book, ct);
+    public void Update(BookEntity book)
+    {
+        appDbContext.Books.Update(book);
+    }
 
-    public void Update(BookEntity book) => _dbContext.BooksEntities.Update(book);
 
-    public void Remove(BookEntity book) => _dbContext.BooksEntities.Remove(book);
+    public void Remove(BookEntity book)
+    {
+        appDbContext.Books.Remove(book);
+    }
+
 }

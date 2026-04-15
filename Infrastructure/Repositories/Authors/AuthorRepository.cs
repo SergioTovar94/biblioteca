@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Shared;
 namespace Infrastructure.Repositories.Authors;
 
-public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
+public class AuthorRepository(AppDbContext appDbContext) : IAuthorRepository
 {
     public async Task AddAsync(AuthorEntity author, CancellationToken ct)
     {
-        await dbContext.AuthorEntities.AddAsync(author, ct);
+        await appDbContext.Authors.AddAsync(author, ct);
     }
 
     public async Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        return await dbContext.AuthorEntities.FindAsync(new object[] { id }, ct);
+        return await appDbContext.Authors.FindAsync(id, ct);
     }
 
     public async Task<PagedResult<AuthorEntity>> GetPagedAsync(
@@ -24,7 +24,7 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
         bool sortDescending,
         CancellationToken ct = default)
     {
-        var query = dbContext.AuthorEntities
+        var query = appDbContext.Authors
             .Where(a => !a.IsDeleted)
             .AsNoTracking();
         query = (sortBy?.ToLower()) switch
@@ -46,26 +46,26 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
 
     public void Update(AuthorEntity author)
     {
-        dbContext.AuthorEntities.Update(author);
+        appDbContext.Authors.Update(author);
     }
 
     public async Task<bool> SoftDeleteAsync(int id, CancellationToken ct)
     {
-        var author = await dbContext.AuthorEntities
+        var author = await appDbContext.Authors
         .IgnoreQueryFilters()
         .FirstOrDefaultAsync(a => a.Id == id, ct);
 
         if (author == null) return false;
 
-        bool hasBooks = await dbContext.BooksEntities.AnyAsync(b => b.AuthorId == id, ct);
+        bool hasBooks = await appDbContext.Books.AnyAsync(b => b.AuthorId == id, ct);
         if (hasBooks)
         {
             author.IsDeleted = true;
-            dbContext.AuthorEntities.Update(author);
+            appDbContext.Authors.Update(author);
         }
         else
         {
-            dbContext.AuthorEntities.Remove(author);
+            appDbContext.Authors.Remove(author);
         }
 
         return true;
