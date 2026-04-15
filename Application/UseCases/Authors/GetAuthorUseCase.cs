@@ -4,11 +4,11 @@ using Shared;
 
 namespace Application.UseCases.Authors;
 
-public class GetAuthorUserCase
+public class GetAuthorUseCase
 {
     private readonly IAuthorRepository _authorRepository;
 
-    public GetAuthorUserCase(IAuthorRepository authorRepository)
+    public GetAuthorUseCase(IAuthorRepository authorRepository)
     {
         _authorRepository = authorRepository;
     }

@@ -1,14 +1,22 @@
-﻿
-namespace Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
-public class AuthorEntity
+namespace Api.Dtos.Authors.Request;
+
+public class UpdateAuthorRequestDto
 {
-    public int Id { get; set; }
+
+    [Required]
+    [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(100)]
     public string LastName { get; set; } = string.Empty;
+
     public DateTime? BirthDate { get; set; }
+
+    [MaxLength(100)]
     public string? Country { get; set; }
+
     public string? Biography { get; set; }
-    public bool IsDeleted { get; set; } = false;
-    public ICollection<BookEntity>? Books { get; set; }
 }

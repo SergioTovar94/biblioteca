@@ -1,9 +1,10 @@
-﻿using Application.Abstractions;
-using Application.Abstractions.Authors;
+﻿using Application.Abstractions.Authors;
+using Application.Abstractions.Books;
 using Application.Abstractions.Persistence;
 using Infrastructure.Persistences;
 using Infrastructure.Queries.Authors;
 using Infrastructure.Repositories.Authors;
+using Infrastructure.Repositories.Books;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAuthorQueries, AuthorQueries>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
 
         return services;
     }

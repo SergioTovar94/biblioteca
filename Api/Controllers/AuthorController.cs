@@ -12,17 +12,20 @@ public class AuthorController : ControllerBase
 
     private readonly CreateAuthorUseCase _createAuthor;
     private readonly ListAuthorsUseCase _listAuthors;
-    private readonly GetAuthorUserCase _getAuthor;
+    private readonly GetAuthorUseCase _getAuthor;
+    private readonly UpdateAuthorUseCase _updateAuthor;
 
     public AuthorController(
         CreateAuthorUseCase createAuthor,
         ListAuthorsUseCase listAuthors,
-        GetAuthorUserCase getAuthor
+        GetAuthorUseCase getAuthor,
+        UpdateAuthorUseCase updateAuthor
         )
     {
         _createAuthor = createAuthor;
         _listAuthors = listAuthors;
         _getAuthor = getAuthor;
+        _updateAuthor = updateAuthor;
     }
 
     [HttpPost("Create")]
@@ -108,5 +111,22 @@ public class AuthorController : ControllerBase
             Biography = author.Biography
         };
         return Ok(response);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateAuthorRequestDto request, CancellationToken ct)
+    {
+        var command = new UpdateAuthorCommand(
+            id,
+            request.Name,
+            request.LastName,
+            request.BirthDate,
+            request.Country,
+            request.Biography
+            );
+        var result = await _updateAuthor.Handle(command, ct);
+        if (!result.IsSuccess)
+            return NotFound(new { error = result.Error });
+        return NoContent();
     }
 }
