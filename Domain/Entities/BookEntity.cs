@@ -9,4 +9,5 @@ public class BookEntity
     public string Genre { get; set; } = string.Empty;
     public int AuthorId { get; set; }
     public virtual AuthorEntity? Author { get; set; }
+    public string CoverImagePath { get; set; } = string.Empty;
 }

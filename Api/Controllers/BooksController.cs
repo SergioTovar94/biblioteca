@@ -4,12 +4,14 @@ using Api.DTOs;
 using Shared;
 using Api.DTOs.Books.Responses;
 using Api.DTOs.Books.Requests;
+using Application.Abstractions.Books;
 
 [ApiController]
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
     private readonly CreateBookUseCase _createBookUseCase;
+    private readonly IFileStorageService _fileStorageService;
     private readonly GetBookUseCase _getBookUseCase;
     private readonly ListBooksUseCase _listBooksUseCase;
     private readonly UpdateBookUseCase _updateBookUseCase;
@@ -17,12 +19,15 @@ public class BooksController : ControllerBase
 
     public BooksController(
         CreateBookUseCase createBookUseCase,
+        IFileStorageService fileStorageService,
         GetBookUseCase getBookUseCase,
         ListBooksUseCase listBooksUseCase,
         UpdateBookUseCase updateBookUseCase,
-        DeleteBookUseCase deleteBookUseCase)
+        DeleteBookUseCase deleteBookUseCase
+        )
     {
         _createBookUseCase = createBookUseCase;
+        _fileStorageService = fileStorageService;
         _getBookUseCase = getBookUseCase;
         _listBooksUseCase = listBooksUseCase;
         _updateBookUseCase = updateBookUseCase;
@@ -30,10 +35,30 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<BookResponseDto>> Create([FromBody] CreateBookRequestDto request, CancellationToken ct)
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<BookResponseDto>> Create(
+        [FromForm] CreateBookMultipartRequestDto request,
+        CancellationToken ct)
     {
+        string coverImagePath;
+        try
+        {
+            using var stream = request.CoverImage.OpenReadStream();
+            coverImagePath = await _fileStorageService.SaveBookCoverAsync(stream, request.CoverImage.FileName, ct);
+        }
+        catch (ArgumentException ex)
+        {
+
+            return BadRequest(new { error = ex.Message });
+        }
         var command = new CreateBookCommand(
-            request.Title, request.NumberOfPages, request.PublishedDate, request.Genre, request.AuthorId);
+            request.Title,
+            request.NumberOfPages,
+            request.PublishedDate,
+            request.Genre,
+            request.AuthorId,
+            coverImagePath
+        );
         var result = await _createBookUseCase.Handle(command, ct);
 
         if (!result.IsSuccess)
@@ -46,7 +71,8 @@ public class BooksController : ControllerBase
             NumberOfPages = request.NumberOfPages,
             PublishedDate = request.PublishedDate,
             Genre = request.Genre,
-            AuthorId = request.AuthorId
+            AuthorId = request.AuthorId,
+            CoverImageUrl = coverImagePath
         };
         return CreatedAtAction(nameof(GetById), new { id = result.Value }, response);
     }
@@ -93,6 +119,7 @@ public class BooksController : ControllerBase
             PublishedDate = book.PublishedDate,
             Genre = book.Genre,
             AuthorId = book.AuthorId,
+            CoverImageUrl = book.CoverImagePath,
             AuthorName = book.Author?.Name + " " + book.Author?.LastName
         });
         return Ok(response);

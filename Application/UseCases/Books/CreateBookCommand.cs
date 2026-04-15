@@ -5,4 +5,5 @@ public record CreateBookCommand(
     int NumberOfPages,
     DateTime PublishedDate,
     string Genre,
-    int AuthorId);
+    int AuthorId,
+    string CoverImagePath);

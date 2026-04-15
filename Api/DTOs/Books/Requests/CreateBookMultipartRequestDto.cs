@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace Api.DTOs.Books.Requests;
 
-public record CreateBookRequestDto
+public record CreateBookMultipartRequestDto
 {
     [Required]
     [MaxLength(200)]
@@ -16,4 +16,6 @@ public record CreateBookRequestDto
 
     [Range(1, int.MaxValue)]
     public int AuthorId { get; init; }
+
+    public IFormFile? CoverImage { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authors;
 using Application.Abstractions.Books;
 using Application.Abstractions.Persistence;
+using Infrastructure.FileStorage;
 using Infrastructure.Persistences;
 using Infrastructure.Queries.Authors;
 using Infrastructure.Repositories.Authors;
@@ -26,7 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthorQueries, AuthorQueries>();
         services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<IBookRepository, BookRepository>();
-
+        services.AddScoped<IFileStorageService, FileStorageService>();
         return services;
     }
 }

@@ -31,7 +31,8 @@ public class CreateBookUseCase
                 NumberOfPages = command.NumberOfPages,
                 PublishedDate = command.PublishedDate,
                 Genre = command.Genre,
-                AuthorId = command.AuthorId
+                AuthorId = command.AuthorId,
+                CoverImagePath = command.CoverImagePath
             };
 
             await _bookRepository.AddAsync(book, ct);
