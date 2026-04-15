@@ -13,14 +13,14 @@ public class ListAuthorsUseCase
         _authorRepository = authorRepository;
     }
 
-    public async Task<Result<PagedResult<AuthorEntity>>> Handle(ListAuthorsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<AuthorEntity>>> Handle(ListAuthorsQuery query, CancellationToken ct)
     {
         var pagedResult = await _authorRepository.GetPagedAsync(
             query.Page,
             query.PageSize,
             query.SortBy,
             query.SortDescending,
-            cancellationToken);
+            ct);
 
         return Result<PagedResult<AuthorEntity>>.Success(pagedResult);
     }

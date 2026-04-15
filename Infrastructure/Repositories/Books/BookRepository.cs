@@ -14,21 +14,21 @@ public class BookRepository : IBookRepository
         _dbContext = dbContext;
     }
 
-    public async Task<BookEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<BookEntity?> GetByIdAsync(int id, CancellationToken ct = default)
         => await _dbContext.BooksEntities
             .Include(b => b.Author)
-            .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(b => b.Id == id, ct);
 
-    public async Task<IEnumerable<BookEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<BookEntity>> GetAllAsync(CancellationToken ct = default)
         => await _dbContext.BooksEntities
             .Include(b => b.Author)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
-    public async Task<IEnumerable<BookEntity>> GetByAuthorIdAsync(int authorId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<BookEntity>> GetByAuthorIdAsync(int authorId, CancellationToken ct = default)
         => await _dbContext.BooksEntities
             .Where(b => b.AuthorId == authorId)
             .Include(b => b.Author)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
     public async Task AddAsync(BookEntity book, CancellationToken ct = default)
         => await _dbContext.BooksEntities.AddAsync(book, ct);

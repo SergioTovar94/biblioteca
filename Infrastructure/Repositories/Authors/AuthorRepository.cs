@@ -12,9 +12,9 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
         await dbContext.AuthorEntities.AddAsync(author, ct);
     }
 
-    public async Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken ct = default)
     {
-        return await dbContext.AuthorEntities.FindAsync(new object[] { id }, cancellationToken);
+        return await dbContext.AuthorEntities.FindAsync(new object[] { id }, ct);
     }
 
     public async Task<PagedResult<AuthorEntity>> GetPagedAsync(
@@ -22,7 +22,7 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
         int pageSize,
         string sortBy,
         bool sortDescending,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         var query = dbContext.AuthorEntities
             .Where(a => !a.IsDeleted)
@@ -35,11 +35,11 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
             _ => sortDescending ? query.OrderByDescending(a => a.Name) : query.OrderBy(a => a.Name)
         };
 
-        var totalCount = await query.CountAsync(cancellationToken);
+        var totalCount = await query.CountAsync(ct);
         var items = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
         return new PagedResult<AuthorEntity>(items, totalCount, page, pageSize);
     }

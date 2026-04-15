@@ -9,24 +9,24 @@ using Api.DTOs.Books.Requests;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly CreateBookUseCase _createHandler;
-    private readonly GetBookUseCase _getHandler;
-    private readonly ListBooksUseCase _listHandler;
-    private readonly UpdateBookUseCase _updateHandler;
-    private readonly DeleteBookUseCase _deleteHandler;
+    private readonly CreateBookUseCase _createBookUseCase;
+    private readonly GetBookUseCase _getBookUseCase;
+    private readonly ListBooksUseCase _listBooksUseCase;
+    private readonly UpdateBookUseCase _updateBookUseCase;
+    private readonly DeleteBookUseCase _deleteBookUseCase;
 
     public BooksController(
-        CreateBookUseCase createHandler,
-        GetBookUseCase getHandler,
-        ListBooksUseCase listHandler,
-        UpdateBookUseCase updateHandler,
-        DeleteBookUseCase deleteHandler)
+        CreateBookUseCase createBookUseCase,
+        GetBookUseCase getBookUseCase,
+        ListBooksUseCase listBooksUseCase,
+        UpdateBookUseCase updateBookUseCase,
+        DeleteBookUseCase deleteBookUseCase)
     {
-        _createHandler = createHandler;
-        _getHandler = getHandler;
-        _listHandler = listHandler;
-        _updateHandler = updateHandler;
-        _deleteHandler = deleteHandler;
+        _createBookUseCase = createBookUseCase;
+        _getBookUseCase = getBookUseCase;
+        _listBooksUseCase = listBooksUseCase;
+        _updateBookUseCase = updateBookUseCase;
+        _deleteBookUseCase = deleteBookUseCase;
     }
 
     [HttpPost]
@@ -34,7 +34,7 @@ public class BooksController : ControllerBase
     {
         var command = new CreateBookCommand(
             request.Title, request.NumberOfPages, request.PublishedDate, request.Genre, request.AuthorId);
-        var result = await _createHandler.Handle(command, ct);
+        var result = await _createBookUseCase.Handle(command, ct);
 
         if (!result.IsSuccess)
             return BadRequest(new { error = result.Error });
@@ -55,7 +55,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<BookResponseDto>> GetById(int id, CancellationToken ct)
     {
         var query = new GetBookQuery(id);
-        var result = await _getHandler.Execute(query, ct);
+        var result = await _getBookUseCase.Handle(query, ct);
 
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
@@ -80,7 +80,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<IEnumerable<BookResponseDto>>> GetAll(CancellationToken ct)
     {
         var query = new ListBooksQuery();
-        var result = await _listHandler.Handle(query, ct);
+        var result = await _listBooksUseCase.Handle(query, ct);
 
         if (!result.IsSuccess)
             return BadRequest(new { error = result.Error });
@@ -103,7 +103,7 @@ public class BooksController : ControllerBase
     {
         var command = new UpdateBookCommand(
             id, request.Title, request.NumberOfPages, request.PublishedDate, request.Genre, request.AuthorId);
-        var result = await _updateHandler.Handle(command, ct);
+        var result = await _updateBookUseCase.Handle(command, ct);
 
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
@@ -115,7 +115,7 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> Delete(int id, CancellationToken ct)
     {
         var command = new DeleteBookCommand(id);
-        var result = await _deleteHandler.Handle(command, ct);
+        var result = await _deleteBookUseCase.Handle(command, ct);
 
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });

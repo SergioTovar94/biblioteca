@@ -13,9 +13,9 @@ public class GetBookUseCase
         _bookRepository = bookRepository;
     }
 
-    public async Task<Result<BookEntity>> Execute(GetBookQuery query, CancellationToken cancellationToken)
+    public async Task<Result<BookEntity>> Handle(GetBookQuery query, CancellationToken ct)
     {
-        var book = await _bookRepository.GetByIdAsync(query.Id, cancellationToken);
+        var book = await _bookRepository.GetByIdAsync(query.Id, ct);
         if (book == null)
             return Result<BookEntity>.Failure("Book not found");
 

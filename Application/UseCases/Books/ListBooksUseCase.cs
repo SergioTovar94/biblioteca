@@ -13,9 +13,9 @@ public class ListBooksUseCase
         _bookRepository = bookRepository;
     }
 
-    public async Task<Result<IEnumerable<BookEntity>>> Handle(ListBooksQuery _, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<BookEntity>>> Handle(ListBooksQuery _, CancellationToken ct)
     {
-        var books = await _bookRepository.GetAllAsync(cancellationToken);
+        var books = await _bookRepository.GetAllAsync(ct);
         return Result<IEnumerable<BookEntity>>.Success(books);
     }
 }

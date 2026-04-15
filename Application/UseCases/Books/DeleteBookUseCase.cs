@@ -15,24 +15,24 @@ public class DeleteBookUseCase
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<bool>> Handle(DeleteBookCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(DeleteBookCommand command, CancellationToken ct)
     {
         try
         {
-            await _unitOfWork.BeginAsync(cancellationToken);
+            await _unitOfWork.BeginAsync(ct);
 
-            var book = await _bookRepository.GetByIdAsync(command.Id, cancellationToken);
+            var book = await _bookRepository.GetByIdAsync(command.Id, ct);
             if (book == null)
                 return Result<bool>.Failure("Book not found");
 
             _bookRepository.Remove(book);
-            await _unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(ct);
 
             return Result<bool>.Success(true);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackAsync(cancellationToken);
+            await _unitOfWork.RollbackAsync(ct);
             return Result<bool>.Failure($"Error deleting book: {ex.Message}");
         }
     }

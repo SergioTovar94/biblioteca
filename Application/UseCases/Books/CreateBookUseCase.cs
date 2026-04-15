@@ -16,14 +16,14 @@ public class CreateBookUseCase
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<int>> Handle(CreateBookCommand command, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(CreateBookCommand command, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(command.Title))
             return Result<int>.Failure("Title is required");
 
         try
         {
-            await _unitOfWork.BeginAsync(cancellationToken);
+            await _unitOfWork.BeginAsync(ct);
 
             var book = new BookEntity
             {
@@ -34,14 +34,14 @@ public class CreateBookUseCase
                 AuthorId = command.AuthorId
             };
 
-            await _bookRepository.AddAsync(book, cancellationToken);
-            await _unitOfWork.CommitAsync(cancellationToken);
+            await _bookRepository.AddAsync(book, ct);
+            await _unitOfWork.CommitAsync(ct);
 
             return Result<int>.Success(book.Id);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackAsync(cancellationToken);
+            await _unitOfWork.RollbackAsync(ct);
             return Result<int>.Failure($"Error creating book: {ex.Message}");
         }
     }

@@ -18,7 +18,7 @@ public class CreateAuthorUseCase
         _uow = uow;
     }
 
-    public async Task<Result<int>> Execute(
+    public async Task<Result<int>> Handle(
         CreateAuthorCommand command,
         CancellationToken ct)
     {

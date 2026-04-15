@@ -15,13 +15,13 @@ public class UpdateBookUseCase
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<bool>> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(UpdateBookCommand command, CancellationToken ct)
     {
         try
         {
-            await _unitOfWork.BeginAsync(cancellationToken);
+            await _unitOfWork.BeginAsync(ct);
 
-            var book = await _bookRepository.GetByIdAsync(command.Id, cancellationToken);
+            var book = await _bookRepository.GetByIdAsync(command.Id, ct);
             if (book == null)
                 return Result<bool>.Failure("Book not found");
 
@@ -32,13 +32,13 @@ public class UpdateBookUseCase
             book.AuthorId = command.AuthorId;
 
             _bookRepository.Update(book);
-            await _unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.CommitAsync(ct);
 
             return Result<bool>.Success(true);
         }
         catch (Exception ex)
         {
-            await _unitOfWork.RollbackAsync(cancellationToken);
+            await _unitOfWork.RollbackAsync(ct);
             return Result<bool>.Failure($"Error updating book: {ex.Message}");
         }
     }

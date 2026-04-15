@@ -10,26 +10,26 @@ namespace Api.Controllers;
 public class AuthorController : ControllerBase
 {
 
-    private readonly CreateAuthorUseCase _createAuthor;
-    private readonly ListAuthorsUseCase _listAuthors;
-    private readonly GetAuthorUseCase _getAuthor;
-    private readonly UpdateAuthorUseCase _updateAuthor;
+    private readonly CreateAuthorUseCase _createAuthorUseCase;
+    private readonly ListAuthorsUseCase _listAuthorsUseCase;
+    private readonly GetAuthorUseCase _getAuthorUseCase;
+    private readonly UpdateAuthorUseCase _updateAuthorUseCase;
 
-    private readonly DeleteAuthorUseCase _deleteAuthor;
+    private readonly DeleteAuthorUseCase _deleteAuthorUseCase;
 
     public AuthorController(
-        CreateAuthorUseCase createAuthor,
-        ListAuthorsUseCase listAuthors,
-        GetAuthorUseCase getAuthor,
-        UpdateAuthorUseCase updateAuthor,
-        DeleteAuthorUseCase deleteAuthor
+        CreateAuthorUseCase createAuthorUseCase,
+        ListAuthorsUseCase listAuthorsUseCase,
+        GetAuthorUseCase getAuthorUseCase,
+        UpdateAuthorUseCase updateAuthorUseCase,
+        DeleteAuthorUseCase deleteAuthorUseCase
         )
     {
-        _createAuthor = createAuthor;
-        _listAuthors = listAuthors;
-        _getAuthor = getAuthor;
-        _updateAuthor = updateAuthor;
-        _deleteAuthor = deleteAuthor;
+        _createAuthorUseCase = createAuthorUseCase;
+        _listAuthorsUseCase = listAuthorsUseCase;
+        _getAuthorUseCase = getAuthorUseCase;
+        _updateAuthorUseCase = updateAuthorUseCase;
+        _deleteAuthorUseCase = deleteAuthorUseCase;
     }
 
     [HttpPost("Create")]
@@ -40,7 +40,7 @@ public class AuthorController : ControllerBase
         var command = new CreateAuthorCommand(
             request.Name, request.LastName, request.BirthDate, request.Country, request.Biography
             );
-        var result = await _createAuthor.Execute(command, ct);
+        var result = await _createAuthorUseCase.Handle(command, ct);
         if (result.IsSuccess)
         {
             var response = new AuthorResponseDto
@@ -73,7 +73,7 @@ public class AuthorController : ControllerBase
         pageSize = pageSize < 1 ? 10 : (pageSize > 100 ? 100 : pageSize);
 
         var query = new ListAuthorsQuery(page, pageSize, sortBy, sortDescending);
-        var result = await _listAuthors.Handle(query, ct);
+        var result = await _listAuthorsUseCase.Handle(query, ct);
 
         if (!result.IsSuccess)
             return BadRequest(new { error = result.Error });
@@ -101,7 +101,7 @@ public class AuthorController : ControllerBase
     public async Task<ActionResult<AuthorResponseDto>> GetById(int id, CancellationToken ct)
     {
         var query = new GetAuthorQuery(id);
-        var result = await _getAuthor.Handler(query, ct);
+        var result = await _getAuthorUseCase.Handler(query, ct);
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
         var author = result.Value;
@@ -128,7 +128,7 @@ public class AuthorController : ControllerBase
             request.Country,
             request.Biography
             );
-        var result = await _updateAuthor.Handle(command, ct);
+        var result = await _updateAuthorUseCase.Handle(command, ct);
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
         return NoContent();
@@ -140,7 +140,7 @@ public class AuthorController : ControllerBase
     )
     {
         var command = new DeleteAuthorCommand(id);
-        var result = await _deleteAuthor.Handle(command, ct);
+        var result = await _deleteAuthorUseCase.Handle(command, ct);
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
         return NoContent();
