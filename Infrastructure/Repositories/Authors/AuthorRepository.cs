@@ -11,7 +11,7 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
         await dbContext.AuthorEntities.AddAsync(author, ct);
     }
 
-    public async Task<AuthorEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await dbContext.AuthorEntities.FindAsync(new object[] { id }, cancellationToken);
     }

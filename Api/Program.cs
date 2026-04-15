@@ -1,6 +1,9 @@
+using Application.Abstractions.Books;
 using Application.UseCases.Authors;
+using Application.UseCases.Books;
 using Domain.Entities;
 using Infrastructure;
+using Infrastructure.Repositories.Books;
 using Microsoft.OpenApi;
 
 
@@ -21,6 +24,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<CreateAuthorUseCase>();
 builder.Services.AddScoped<AuthorListUseCase>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<CreateBookUseCase>();
+builder.Services.AddScoped<GetBookUseCase>();
+builder.Services.AddScoped<ListBooksUseCase>();
+builder.Services.AddScoped<UpdateBookUseCase>();
+builder.Services.AddScoped<DeleteBookUseCase>();
 
 var app = builder.Build();
 

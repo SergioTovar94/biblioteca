@@ -19,6 +19,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             e.ToTable("Books");
             e.HasKey(x => x.Id);
             e.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            e.Property(x => x.PublishedDate).IsRequired();
+            e.Property(x => x.Genre).HasMaxLength(100).IsRequired(false);
             e.Property(x => x.NumberOfPages).HasMaxLength(200).IsRequired();
             e.HasOne(x => x.Author).WithMany(x => x.Books).HasForeignKey(x => x.AuthorId);
         });
