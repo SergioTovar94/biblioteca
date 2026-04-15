@@ -1,4 +1,4 @@
-namespace Api.DTOs.Books.Responses;
+namespace Api.Dtos.Books.Responses;
 
 public record BookResponseDto
 {
@@ -8,6 +8,6 @@ public record BookResponseDto
     public DateTime PublishedDate { get; init; }
     public string Genre { get; init; } = string.Empty;
     public int AuthorId { get; init; }
-    public string? CoverImageUrl { get; set; }
+    public string? CoverImageUrl { get; init; }
     public string AuthorName { get; init; } = string.Empty; // Opcional, para mostrar nombre del autor
 }

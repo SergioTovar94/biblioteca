@@ -2,21 +2,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Dtos.Authors.Request;
 
-public class UpdateAuthorRequestDto
+public record UpdateAuthorRequestDto
 {
 
     [Required]
     [MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
 
     [Required]
     [MaxLength(100)]
-    public string LastName { get; set; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
 
-    public DateTime? BirthDate { get; set; }
+    public DateTime? BirthDate { get; init; }
 
     [MaxLength(100)]
-    public string? Country { get; set; }
+    public string? Country { get; init; }
 
-    public string? Biography { get; set; }
+    public string? Biography { get; init; }
 }

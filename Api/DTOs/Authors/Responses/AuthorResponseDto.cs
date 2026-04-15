@@ -1,6 +1,6 @@
 namespace Api.Dtos.Authors.Responses;
 
-public class AuthorResponseDto
+public record AuthorResponseDto
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;

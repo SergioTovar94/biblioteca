@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-namespace Api.DTOs.Books.Requests;
+namespace Api.Dtos.Books.Requests;
 
 public record UpdateBookRequestDto
 {
