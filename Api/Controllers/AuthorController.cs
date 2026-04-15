@@ -15,17 +15,21 @@ public class AuthorController : ControllerBase
     private readonly GetAuthorUseCase _getAuthor;
     private readonly UpdateAuthorUseCase _updateAuthor;
 
+    private readonly DeleteAuthorUseCase _deleteAuthor;
+
     public AuthorController(
         CreateAuthorUseCase createAuthor,
         ListAuthorsUseCase listAuthors,
         GetAuthorUseCase getAuthor,
-        UpdateAuthorUseCase updateAuthor
+        UpdateAuthorUseCase updateAuthor,
+        DeleteAuthorUseCase deleteAuthor
         )
     {
         _createAuthor = createAuthor;
         _listAuthors = listAuthors;
         _getAuthor = getAuthor;
         _updateAuthor = updateAuthor;
+        _deleteAuthor = deleteAuthor;
     }
 
     [HttpPost("Create")]
@@ -125,6 +129,18 @@ public class AuthorController : ControllerBase
             request.Biography
             );
         var result = await _updateAuthor.Handle(command, ct);
+        if (!result.IsSuccess)
+            return NotFound(new { error = result.Error });
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(
+        int id, CancellationToken ct
+    )
+    {
+        var command = new DeleteAuthorCommand(id);
+        var result = await _deleteAuthor.Handle(command, ct);
         if (!result.IsSuccess)
             return NotFound(new { error = result.Error });
         return NoContent();

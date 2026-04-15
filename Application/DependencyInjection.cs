@@ -10,13 +10,14 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddScoped<CreateAuthorUseCase>();
-        services.AddScoped<UpdateAuthorUseCase>();
         services.AddScoped<ListAuthorsUseCase>();
         services.AddScoped<GetAuthorUseCase>();
+        services.AddScoped<UpdateAuthorUseCase>();
+        services.AddScoped<DeleteAuthorUseCase>();
 
         services.AddScoped<CreateBookUseCase>();
-        services.AddScoped<GetBookUseCase>();
         services.AddScoped<ListBooksUseCase>();
+        services.AddScoped<GetBookUseCase>();
         services.AddScoped<UpdateBookUseCase>();
         services.AddScoped<DeleteBookUseCase>();
 
