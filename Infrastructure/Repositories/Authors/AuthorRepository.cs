@@ -49,8 +49,25 @@ public class AuthorRepository(AppDbContext dbContext) : IAuthorRepository
         dbContext.AuthorEntities.Update(author);
     }
 
-    public void Remove(AuthorEntity author)
+    public async Task<bool> SoftDeleteAsync(int id, CancellationToken ct)
     {
-        dbContext.AuthorEntities.Remove(author);
+        var author = await dbContext.AuthorEntities
+        .IgnoreQueryFilters()
+        .FirstOrDefaultAsync(a => a.Id == id, ct);
+
+        if (author == null) return false;
+
+        bool hasBooks = await dbContext.BooksEntities.AnyAsync(b => b.AuthorId == id, ct);
+        if (hasBooks)
+        {
+            author.IsDeleted = true;
+            dbContext.AuthorEntities.Update(author);
+        }
+        else
+        {
+            dbContext.AuthorEntities.Remove(author);
+        }
+
+        return true;
     }
 }

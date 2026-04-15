@@ -14,5 +14,5 @@ public interface IAuthorRepository
         CancellationToken ct = default);
     Task AddAsync(AuthorEntity author, CancellationToken ct = default);
     void Update(AuthorEntity author);
-    void Remove(AuthorEntity author);
+    Task<bool> SoftDeleteAsync(int id, CancellationToken ct);
 }

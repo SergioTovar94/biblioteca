@@ -22,7 +22,9 @@ public class DeleteAuthorUseCase
             var author = await _authorRepository.GetByIdAsync(command.Id, ct);
             if (author == null)
                 return Result<bool>.Failure("Author not found");
-            _authorRepository.Remove(author);
+            var success = await _authorRepository.SoftDeleteAsync(command.Id, ct);
+            if (!success)
+                return Result<bool>.Failure("Author could not be deleted");
             await _unitOfWork.CommitAsync(ct);
             return Result<bool>.Success(true);
         }
