@@ -10,16 +10,27 @@ namespace Api.Controllers;
 public class AuthorController : ControllerBase
 {
 
+    private readonly CreateAuthorUseCase _createAuthor;
+    private readonly ListAuthorsUseCase _listAuthors;
+
+    public AuthorController(
+        CreateAuthorUseCase createAuthor,
+        ListAuthorsUseCase listAuthors
+        )
+    {
+        _createAuthor = createAuthor;
+        _listAuthors = listAuthors;
+    }
+
     [HttpPost("Create")]
     public async Task<IActionResult> CreateAuthor(
         [FromBody] CreateAuthorRequestDto request,
-        [FromServices] CreateAuthorUseCase useCase,
         CancellationToken ct)
     {
         var command = new CreateAuthorCommand(
             request.Name, request.LastName, request.BirthDate, request.Country, request.Biography
             );
-        var result = await useCase.Execute(command, ct);
+        var result = await _createAuthor.Execute(command, ct);
         if (result.IsSuccess)
         {
             var response = new AuthorResponseDto
@@ -40,9 +51,39 @@ public class AuthorController : ControllerBase
     }
 
     [HttpGet("List")]
-    public async Task<IActionResult> ListAuthors([FromServices] AuthorListUseCase authorListDomain, CancellationToken ct)
+    public async Task<ActionResult<PagedAuthorResponseDto>> GetAll(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string sortBy = "Name",
+    [FromQuery] bool sortDescending = false,
+    CancellationToken ct = default)
     {
-        var result = await authorListDomain.GetAuthorsAsync(ct);
-        return Ok(result);
+        // Validar valores (opcional)
+        page = page < 1 ? 1 : page;
+        pageSize = pageSize < 1 ? 10 : (pageSize > 100 ? 100 : pageSize);
+
+        var query = new ListAuthorsQuery(page, pageSize, sortBy, sortDescending);
+        var result = await _listAuthors.Handle(query, ct);
+
+        if (!result.IsSuccess)
+            return BadRequest(new { error = result.Error });
+
+        var response = new PagedAuthorResponseDto
+        {
+            Items = result.Value.Items.Select(author => new AuthorResponseDto
+            {
+                Id = author.Id,
+                Name = author.Name,
+                LastName = author.LastName,
+                BirthDate = author.BirthDate,
+                Country = author.Country,
+                Biography = author.Biography
+            }),
+            TotalCount = result.Value.TotalCount,
+            Page = result.Value.Page,
+            PageSize = result.Value.PageSize,
+            TotalPages = result.Value.TotalPages
+        };
+        return Ok(response);
     }
 }

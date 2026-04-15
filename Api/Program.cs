@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<CreateAuthorUseCase>();
-builder.Services.AddScoped<AuthorListUseCase>();
+builder.Services.AddScoped<ListAuthorsUseCase>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<CreateBookUseCase>();
 builder.Services.AddScoped<GetBookUseCase>();

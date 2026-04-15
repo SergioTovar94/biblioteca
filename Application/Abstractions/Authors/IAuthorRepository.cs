@@ -1,11 +1,17 @@
 ﻿using Domain.Entities;
+using Shared;
 
 namespace Application.Abstractions.Authors;
 
 public interface IAuthorRepository
 {
-    Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-    Task<IEnumerable<AuthorEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<AuthorEntity?> GetByIdAsync(int id, CancellationToken ct = default);
+    Task<PagedResult<AuthorEntity>> GetPagedAsync(
+        int page,
+        int pageSize,
+        string sortBy,
+        bool sortDescending,
+        CancellationToken ct = default);
     Task AddAsync(AuthorEntity author, CancellationToken ct = default);
     void Update(AuthorEntity author);
     void Remove(AuthorEntity author);
