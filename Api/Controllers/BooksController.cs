@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.UseCases.Books;
-using Api.DTOs;
-using Shared;
-using Api.DTOs.Books.Responses;
-using Api.DTOs.Books.Requests;
 using Application.Abstractions.Books;
+using Api.Dtos.Books.Responses;
+using Api.Dtos.Books.Requests;
 
 [ApiController]
 [Route("api/[controller]")]

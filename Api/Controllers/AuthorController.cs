@@ -38,26 +38,28 @@ public class AuthorController : ControllerBase
         CancellationToken ct)
     {
         var command = new CreateAuthorCommand(
-            request.Name, request.LastName, request.BirthDate, request.Country, request.Biography
+            request.Name,
+            request.LastName,
+            request.BirthDate,
+            request.Country,
+            request.Biography
             );
         var result = await _createAuthorUseCase.Handle(command, ct);
-        if (result.IsSuccess)
-        {
-            var response = new AuthorResponseDto
-            {
-                Id = result.Value,
-                Name = request.Name,
-                LastName = request.LastName,
-                BirthDate = request.BirthDate,
-                Country = request.Country,
-                Biography = request.Biography
-            };
-            return CreatedAtAction(nameof(CreateAuthor), new { id = result.Value }, response);
-        }
-        else
-        {
+
+        if (!result.IsSuccess)
             return BadRequest(new { error = result.Error });
-        }
+
+        var response = new AuthorResponseDto
+        {
+            Id = result.Value,
+            Name = request.Name,
+            LastName = request.LastName,
+            BirthDate = request.BirthDate,
+            Country = request.Country,
+            Biography = request.Biography
+        };
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Value }, response);
     }
 
     [HttpGet("List")]

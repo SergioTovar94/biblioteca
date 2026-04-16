@@ -7,7 +7,7 @@ public class LoanEntity
     public string BorrowerName { get; set; } = string.Empty;
     public DateTime LoanDate { get; set; }
     public DateTime DueDate { get; set; }
-    public DateTime ReturnDate { get; set; }
+    public DateTime? ReturnDate { get; set; }
     public virtual BookEntity? Book { get; set; } = null!;
 
 }

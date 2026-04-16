@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Application.UseCases.Authors;
 using Application.UseCases.Books;
+using Application.UseCases.Loans;
 
 namespace Application;
 
@@ -20,6 +21,9 @@ public static class DependencyInjection
         services.AddScoped<GetBookUseCase>();
         services.AddScoped<UpdateBookUseCase>();
         services.AddScoped<DeleteBookUseCase>();
+
+        services.AddScoped<CreateLoanUseCase>();
+        services.AddScoped<GetLoanUseCase>();
 
         return services;
     }
