@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { UserGroupIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, BookOpenIcon } from "@heroicons/react/24/outline";
 const navigation = [
     { name: 'Autores', href: '/', icon: UserGroupIcon },
+    { name: 'Libros', href: '/books', icon: BookOpenIcon },
 ]
 
 function Sidebar() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthors } from "../../hooks/useAuthors";
-import Table from "../../components/Table/Table";
+import Table from "./AuthorsTable";
 
 export default function AuthorsPage() {
   const [page, setPage] = useState(1);
