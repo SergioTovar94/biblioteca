@@ -26,7 +26,7 @@ export default function Table({ data }) {
             <td className="px-4 py-4 whitespace-nowrap text-sm">
               {book.coverImageUrl ? (
                 <img
-                  src={`http://localhost:5088${book.coverImageUrl}`}
+                  src={`${import.meta.env.VITE_API_URL}${book.coverImageUrl}`}
                   alt={`Portada de ${book.title}`}
                   className="w-12 h-16 object-cover rounded shadow"
                 />
