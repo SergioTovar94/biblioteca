@@ -1,9 +1,20 @@
-using Core.Domains.Authors;
+using Application;
 using Infrastructure;
 using Microsoft.OpenApi;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -17,12 +28,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddScoped<CreateAuthorDomain>();
-builder.Services.AddScoped<AuthorListDomain>();
+builder.Services.AddApplication();
 
 var app = builder.Build();
-
+app.UseSwagger();
+app.UseSwaggerUI();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

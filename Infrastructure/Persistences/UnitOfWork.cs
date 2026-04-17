@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -24,7 +24,10 @@ public sealed class UnitOfWork(AppDbContext db) : IUnitOfWork
     public async Task CommitAsync(CancellationToken ct)
     {
         if (Db.Database.CurrentTransaction is not null)
+        {
+            await Db.SaveChangesAsync(ct);
             await Db.Database.CurrentTransaction.CommitAsync(ct);
+        }
     }
 
     public async Task RollbackAsync(CancellationToken ct)

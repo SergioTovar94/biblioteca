@@ -1,0 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+namespace Api.Dtos.Books.Requests;
+
+public record UpdateBookRequestDto
+{
+    [Required]
+    [MaxLength(200)]
+    public string Title { get; init; } = string.Empty;
+
+    [Range(1, int.MaxValue, ErrorMessage = "NumberOfPages debe ser mayor que 0")]
+    public int NumberOfPages { get; init; }
+    public DateTime PublishedDate { get; init; }
+
+    [MaxLength(50)]
+    public string Genre { get; init; } = string.Empty;
+
+    [Range(1, int.MaxValue)]
+    public int AuthorId { get; init; }
+}
