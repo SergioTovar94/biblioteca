@@ -13,14 +13,23 @@ public class LoanController : ControllerBase
 {
     private readonly CreateLoanUseCase _createLoanUseCase;
     private readonly GetLoanUseCase _getLoanUseCase;
+    private readonly ListLoansUseCase _listLoansUseCase;
+    private readonly UpdateLoanUseCase _updateLoanUseCase;
+    private readonly DeleteLoanUseCase _deleteLoanUseCase;
 
     public LoanController(
         CreateLoanUseCase createLoanUseCase,
-        GetLoanUseCase getLoanUseCase
+        GetLoanUseCase getLoanUseCase,
+        ListLoansUseCase listLoansUseCase,
+        UpdateLoanUseCase updateLoanUseCase,
+        DeleteLoanUseCase deleteLoanUseCase
         )
     {
         _createLoanUseCase = createLoanUseCase;
         _getLoanUseCase = getLoanUseCase;
+        _listLoansUseCase = listLoansUseCase;
+        _updateLoanUseCase = updateLoanUseCase;
+        _deleteLoanUseCase = deleteLoanUseCase;
     }
 
     [HttpPost("Create")]
@@ -62,6 +71,14 @@ public class LoanController : ControllerBase
             LoanDate = loan.LoanDate,
             DueDate = loan.DueDate
         };
+        return Ok(response);
+    }
+
+    [HttpGet("List")]
+    public async Task<ActionResult<IEnumerable<LoanResponseDto>>> GetAll(CancellationToken ct)
+    {
+        var command = new ListLoansQuery();
+        var response = await _listLoansUseCase.Handle(command, ct);
         return Ok(response);
     }
 

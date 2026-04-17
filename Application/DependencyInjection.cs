@@ -24,6 +24,9 @@ public static class DependencyInjection
 
         services.AddScoped<CreateLoanUseCase>();
         services.AddScoped<GetLoanUseCase>();
+        services.AddScoped<ListLoansUseCase>();
+        services.AddScoped<UpdateLoanUseCase>();
+        services.AddScoped<DeleteLoanUseCase>();
 
         return services;
     }
