@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export function useAuthors(page = 1, pageSize = 10) {
+export function useLoans(page = 1, pageSize = 10) {
     const [loans, setLoans] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -10,15 +10,9 @@ export function useAuthors(page = 1, pageSize = 10) {
         try {
             setLoading(true);
 
-            const response = await api.get("/Loan/List", {
-                params: {
-                    page,
-                    pageSize,
-                },
-            });
-
-            setAuthors(response.data.items);
-            setTotalPages(response.data.totalPages);
+            const response = await api.get("/Loan/List");
+            console.log("Respuesta de la API:", response.data);
+            setLoans(response.data);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -27,14 +21,13 @@ export function useAuthors(page = 1, pageSize = 10) {
     };
 
     useEffect(() => {
-        fetchAuthors();
-    }, [page, pageSize]);
+        fetchLoans();
+    }, []);
 
     return {
-        authors,
-        totalPages,
+        loans,
         loading,
         error,
-        refetch: fetchAuthors,
+        refetch: fetchLoans,
     };
 }
