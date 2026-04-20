@@ -7,4 +7,5 @@ public record LoanResponseDto
     public string BorrowerName { get; init; } = string.Empty;
     public DateTime LoanDate { get; init; }
     public DateTime DueDate { get; init; }
+    public string? BookName { get; init; } = string.Empty;
 }
