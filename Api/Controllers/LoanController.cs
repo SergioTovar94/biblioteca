@@ -78,7 +78,18 @@ public class LoanController : ControllerBase
     public async Task<ActionResult<IEnumerable<LoanResponseDto>>> GetAll(CancellationToken ct)
     {
         var command = new ListLoansQuery();
-        var response = await _listLoansUseCase.Handle(command, ct);
+        var result = await _listLoansUseCase.Handle(command, ct);
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+        var response = result.Value.Select(loan => new LoanResponseDto
+        {
+            Id = loan.Id,
+            BookId = loan.BookId,
+            DueDate = loan.DueDate,
+            BorrowerName = loan.BorrowerName,
+            LoanDate = loan.LoanDate,
+            BookName = loan.Book?.Title
+        });
         return Ok(response);
     }
 

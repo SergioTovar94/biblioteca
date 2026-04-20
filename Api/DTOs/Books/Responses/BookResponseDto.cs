@@ -9,5 +9,5 @@ public record BookResponseDto
     public string Genre { get; init; } = string.Empty;
     public int AuthorId { get; init; }
     public string? CoverImageUrl { get; init; }
-    public string AuthorName { get; init; } = string.Empty; // Opcional, para mostrar nombre del autor
+    public string AuthorName { get; init; } = string.Empty;
 }

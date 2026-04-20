@@ -19,7 +19,9 @@ public class LoansRepository(AppDbContext appDbContext) : ILoanRepository
 
     public async Task<IReadOnlyList<LoanEntity>> GetAllAsync(CancellationToken ct = default)
     {
-        return await appDbContext.Loans.ToListAsync(ct);
+        return await appDbContext.Loans
+        .Include(l => l.Book)
+        .ToListAsync(ct);
     }
 
     public void Update(LoanEntity loan)
